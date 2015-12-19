@@ -22,6 +22,7 @@ app.post('/', function (req, res) {
 
     var postData = req.body;
     postData.text = clean(postData.text.replace(postData.trigger_word, ''));
+    postData.response_type = 'in_channel';
 
     if (postData.token !== postToken) {
         return res.json({

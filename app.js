@@ -6,6 +6,7 @@ var cheerio = require('cheerio');
 var postToken = process.env.POST_TOKEN || '';
 var getToken = process.env.GET_TOKEN || '';
 var port = process.env.PORT || 3000;
+var in_channel = process.env.IN_CHANNEL ? 'in_channel' : 'ephemeral';
 var messages = {
     INVALID_TOKEN: 'SEA Source, Scorch, Scorch. FLATLINED, bitch. (invalid token)',
     NO_QUERY: 'You have to tell me what to look for, mate.',
@@ -25,10 +26,12 @@ app.post('/', function (req, res) {
 
     if (postData.token !== postToken) {
         return res.json({
+            response_type: in_channel,
             text: messages.INVALID_TOKEN
         });
     } else if (!postData.text || !postData.text.length) {
         return res.json({
+            response_type: in_channel,
             text: messages.NO_QUERY
         });
     }
@@ -46,6 +49,7 @@ app.post('/', function (req, res) {
         o += clean(panel.find('.card-illustrator').text()) + '\n';
         o += panel.find('a.card-title').attr('href');
         res.json({
+            response_type: in_channel,
             text: o
         });
     }, function (matches) {
@@ -59,10 +63,12 @@ app.post('/', function (req, res) {
             o += '  • ' + s + '\n';
         });
         res.json({
+            response_type: in_channel,
             text: o
         });
     }, function () {
         res.json({
+            response_type: in_channel,
             text: messages.NO_RESULTS
         });
     }, function () {
